@@ -25,6 +25,7 @@ const ADB = require("adb");
 const Promise = require("sdk/core/promise");
 const Runtime = require("runtime");
 const Validator = require("./validator");
+const DevKit = require("devkit");
 
 // The b2gremote debugger module that installs apps to devices.
 const Debugger = require("debugger");
@@ -130,24 +131,28 @@ let simulator = module.exports = {
       let manifestFile = fp.file.path;
       console.log("Selected " + manifestFile);
 
-      let apps = simulator.apps;
-      apps[manifestFile] = {
-        type: "local",
-        xkey: UUID.uuid().toString().slice(1, -1)
-      };
-      console.log("Registered App " + JSON.stringify(apps[manifestFile]));
-
-      let next = function next(error, app) {
-        // Update the Dashboard to reflect changes to the record and run the app
-        // if the update succeeded.  Otherwise, it isn't necessary to notify
-        // the user about the error, as it'll show up in the validation results.
-        simulator.sendListApps();
-        if (!error) {
-          simulator.runApp(app);
-        }
-      };
-      this.updateApp(manifestFile, next);
+      simulator.addAppByPath(manifestFile);
     }
+  },
+
+  addAppByPath: function(manifestFile) {
+    let apps = simulator.apps;
+    apps[manifestFile] = {
+      type: "local",
+      xkey: UUID.uuid().toString().slice(1, -1)
+    };
+    console.log("Registered App " + JSON.stringify(apps[manifestFile]));
+
+    let next = function next(error, app) {
+      // Update the Dashboard to reflect changes to the record and run the app
+      // if the update succeeded.  Otherwise, it isn't necessary to notify
+      // the user about the error, as it'll show up in the validation results.
+      simulator.sendListApps();
+      if (!error) {
+        simulator.runApp(app);
+      }
+    };
+    this.updateApp(manifestFile, next);
   },
 
   updateAll: function(oncompleted) {
@@ -1168,6 +1173,16 @@ let simulator = module.exports = {
           simulator.updateReceiptType(message.id, message.receiptType);
         } else {
           console.log("Simulator failed to update receipt type");
+        }
+        break;
+      case "createNewApp":
+        if (message.manifestData) {
+          var manifestPath = DevKit.createNewApp(message.manifestData);
+          if (manifestPath) {
+            simulator.addAppByPath(manifestPath);
+          }
+        } else {
+          console.log("Not enough information to create new app");
         }
         break;
     }
