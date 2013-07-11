@@ -12,4 +12,6 @@ overlay chrome://prosthesis/content/shell.xul chrome://prosthesis/content/shell-
 overlay chrome://prosthesis/content/shell.xul chrome://prosthesis/content/shell-linux.xul os=Linux
 
 manifest components/FakeGeolocationProvider.manifest
+manifest components/FakeMobileMessageDatabaseService.manifest
+manifest components/FakeSmsService.manifest
 manifest components/SimulatorScreen.manifest

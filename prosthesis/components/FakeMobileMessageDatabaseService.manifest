@@ -1,0 +1,2 @@
+component {cd7a41cf-0429-4943-827f-aa548cac895a} FakeMobileMessageDatabaseService.js
+contract @mozilla.org/mobilemessage/mobilemessagedatabaseservice;1 {cd7a41cf-0429-4943-827f-aa548cac895a}

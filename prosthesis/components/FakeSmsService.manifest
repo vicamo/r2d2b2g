@@ -1,0 +1,2 @@
+component {80100ceb-3f69-474c-bb8d-e25df605cbb6} FakeSmsService.js
+contract @mozilla.org/sms/smsservice;1 {80100ceb-3f69-474c-bb8d-e25df605cbb6}
